@@ -1,19 +1,12 @@
-;;; reveal-in-osx-finder.el --- Reveal file associated with buffer in OS X Finder
-
-;; Copyright (C) 2014-  Kazuki YOSHIDA
-
-;; Author: Kazuki YOSHIDA
-;; Keywords: OS X, Finder
-;; URL: https://github.com/kaz-yos/reveal-in-osx-finder
-;; Version: 0.3.3
+;;; reveal-in-osx-finder.el --- Reveal file in OS X Finder
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation, either version 3 of the License, or
 ;; (at your option) any later version.
 
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; This program is distributed
+;; WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
 
@@ -24,9 +17,13 @@
 ;;
 ;; Usage:
 ;;
-;; If M-x reveal-in-osx-finder is invoked in a file-associated buffer,
-;; it will open the folder enclosing the file in the OS X Finder.
-;; It will also highlight the file the buffer is associated with within the folder.
+;; If M-x reveal-in-osx-finder is invoked,
+;; If marked region is not empty and the marked region is a valid file/path
+;; It will open the folder enclosing the file in the OS X Finder.
+;; and highlight the file the buffer is associated with within the folder.
+;; If there's no marked region,
+;; It will open the folder enclosing the file associated with the buffer in the OS X Finder.
+;; and highlight the file the buffer is associated with within the folder.
 ;;
 ;; If M-x reveal-in-osx-finder is invoked in a dired buffer,
 ;; it will open the current folder in the OS X Finder.
@@ -36,15 +33,8 @@
 ;; it will open the folder defined in the default-directory variable.
 ;;
 ;;
-;; Special thanks:
-;;
-;; This is a modified version of the open-finder found at the URL below.
-;; Thank you elemakil and lawlist for introducing this nice piece of code,
-;; http://stackoverflow.com/questions/20510333/in-emacs-how-to-show-current-file-in-finder
-;; and Peter Salazar for pointing out a useful link about AppleScript (below),
-;; http://stackoverflow.com/questions/11222501/finding-a-file-selecting-it-in-finder-issue
-;; and mikeypostman and purcell for auditing the code for MELPA approval.
-
+;; Give special thanks to the work of Kazuki YOSHIDA (URL: https://github.com/kaz-yos/reveal-in-osx-finder),
+;; as this comes by standing on shoulder of that work.
 
 ;;; Code:
 
@@ -57,7 +47,11 @@
   "Reveal the file associated with the current buffer in the OS X Finder.
 In a dired buffer, it will open the current directory."
   (interactive)
-  (let* ((path (buffer-file-name)) ; The full file path associated with the buffer.
+  (let* ((path-tmp (if (use-region-p)
+		   (expand-file-name (buffer-substring (region-beginning) (region-end)))
+		 (buffer-file-name))) ; The file path under marked or full file path associated with the buffer.
+	 ;;check if the path is valid (it may be invalide if is coming from marked region
+	 (path (if (or (file-directory-p path-tmp) (file-exists-p path-tmp)) path-tmp nil))
 	 (filename-at-point (dired-file-name-at-point)) ; effective in dired only
 	 ;; Create a full path if filename-at-point is non-nil
 	 (filename-at-point (if filename-at-point
@@ -81,7 +75,7 @@ In a dired buffer, it will open the current directory."
 	   (setq dir  (expand-file-name default-directory))))
 
     ;; Pass dir and file to the helper function.
-    ;; (message (concat "dir:" dir " ; file:" file " ; path:" path " ; fap:" filename-at-point)) ; for debugging
+    ;; (message (concat "dir:" dir " ; file:" file " ; path1:" path1 " ; fap:" filename-at-point)) ; for debugging
     (reveal-in-osx-finder-as dir file) ; These variables are  passed to the helper function.
     ))
 
