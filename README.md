@@ -4,8 +4,8 @@ reveal-in-osx-finder
 **Usage:**
 
 - If ```M-x reveal-in-osx-finder``` is invoked in a file-associated buffer.
--- If there exists marked region with a valid file/file path, it will open the folder enclosing the file indicated by the marked region in the OS X Finder. It will also highlight the file the buffer is associated with within the folder.
--- Otherwise, it will open the folder enclosing the file associated with the buffer. It will also highlight the file the buffer is associated with within the folder.
+-  If there exists marked region with a valid file/file path, it will open the folder enclosing the file indicated by the marked region in the OS X Finder. It will also highlight the file the buffer is associated with within the folder.
+-  Otherwise, it will open the folder enclosing the file associated with the buffer. It will also highlight the file the buffer is associated with within the folder.
 
 - If ```M-x reveal-in-osx-finder``` is invoked in a dired buffer, it will open the current folder in the OS X Finder. It will also highlight the file at point if available.
 
@@ -27,7 +27,6 @@ Put the following in your emacs configuration file.
 
 **Acknowledgement:**
 
-;;
-;; Give special thanks to the work of Kazuki YOSHIDA (URL: https://github.com/kaz-yos/reveal-in-osx-finder),
-;; as this comes by standing on shoulder of that work.
+
+Give special thanks to the work of Kazuki YOSHIDA (URL: https://github.com/kaz-yos/reveal-in-osx-finder), as this comes by standing on the shoulder of that awesome work.
 
